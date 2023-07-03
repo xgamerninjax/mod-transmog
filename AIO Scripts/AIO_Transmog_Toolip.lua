@@ -5,7 +5,7 @@ if AIO.AddAddon() then
 	local function FindAppearance(player, msg)
 		local results = {}
 
-		local query = "SELECT item_template_id FROM custom_unlocked_appearances WHERE account_id =" .. player:GetAccountId()
+		local query = "SELECT item_template_id FROM custom_unlocked_appearances WHERE account_id = " .. player:GetAccountId()
 		local dbResult = CharDBQuery(query)
 
 		if dbResult then
@@ -18,8 +18,14 @@ if AIO.AddAddon() then
 		AIO.Msg():Add("AppearanceResult", results):Send(player)
 	end
 	
+	local function OnPlayerLoot(event, player, item, count)
+		FindAppearance(player, ".")
+	end
+	
 	--Register Events
 	AIO.RegisterEvent("FindAppearance", FindAppearance)
+	
+	RegisterPlayerEvent(32, OnPlayerLoot)
 else
     -- we are on client
 
@@ -44,7 +50,7 @@ else
 
 
 	local TransmogTip = CreateFrame("Frame")
-	TransmogTip:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+	TransmogTip:RegisterEvent("BAG_UPDATE")
 	TransmogTip:RegisterEvent("ADDON_LOADED")
 	TransmogTip:SetScript("OnEvent", function(self, event, arg1, ...) onEvent(self, event, arg1, ...) end);
 
@@ -55,7 +61,7 @@ else
 		  AIO.Msg():Add("FindAppearance", "."):Send()
 		end
 	  end
-	  if event== "PLAYER_EQUIPMENT_CHANGED" then
+	  if event== "BAG_UPDATE" then
 		AIO.Msg():Add("FindAppearance", "."):Send()
 	  end
 	end
