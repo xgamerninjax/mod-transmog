@@ -585,25 +585,32 @@ public:
         if (!sT->GetUseCollectionSystem() || !item)
             return;
 
-
-        AddToDatabase(player, item);
+        if (item->GetTemplate()->Bonding == ItemBondingType::BIND_WHEN_PICKED_UP || item->IsSoulBound() || item->GetTemplate()->Bonding == ItemBondingType::NO_BIND)
+        {
+            AddToDatabase(player, item);
+        }
+        else
+        {
+            std::cout << "transmog else!" << std::endl;
+        }
     }
 
     void OnCreateItem(Player* player, Item* item, uint32 /*count*/) override
     {
         if (!sT->GetUseCollectionSystem())
             return;
-        if (item->GetTemplate()->Bonding == ItemBondingType::BIND_WHEN_PICKED_UP || item->IsSoulBound())
+        if (item->GetTemplate()->Bonding == ItemBondingType::BIND_WHEN_PICKED_UP || item->IsSoulBound() || item->GetTemplate()->Bonding == ItemBondingType::NO_BIND)
         {
             AddToDatabase(player, item);
         }
+        
     }
 
     void OnAfterStoreOrEquipNewItem(Player* player, uint32 /*vendorslot*/, Item* item, uint8 /*count*/, uint8 /*bag*/, uint8 /*slot*/, ItemTemplate const* /*pProto*/, Creature* /*pVendor*/, VendorItem const* /*crItem*/, bool /*bStore*/) override
     {
         if (!sT->GetUseCollectionSystem())
             return;
-        if (item->GetTemplate()->Bonding == ItemBondingType::BIND_WHEN_PICKED_UP || item->IsSoulBound())
+        if (item->GetTemplate()->Bonding == ItemBondingType::BIND_WHEN_PICKED_UP || item->IsSoulBound() || item->GetTemplate()->Bonding == ItemBondingType::NO_BIND)
         {
             AddToDatabase(player, item);
         }
